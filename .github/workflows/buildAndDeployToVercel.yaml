@@ -19,6 +19,10 @@ on:
         description: 'Vercel Project ID'
         required: true
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.vercel_org_id }}
+  VERCEL_PROJECT_ID: ${{ secrets.vercel_project_id }}
+
 jobs:
   setup:
     name: Setup
