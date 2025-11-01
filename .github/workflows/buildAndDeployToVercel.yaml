@@ -8,6 +8,10 @@ on:
         required: true
         type: string
         default: preview
+      node_version:
+        description: 'Node.js Version'
+        required: true
+        default: '22'
     secrets:
       vercel_token:
         description: 'Vercel Token'
@@ -18,10 +22,12 @@ on:
       vercel_project_id:
         description: 'Vercel Project ID'
         required: true
+      
 
 env:
   VERCEL_ORG_ID: ${{ secrets.vercel_org_id }}
   VERCEL_PROJECT_ID: ${{ secrets.vercel_project_id }}
+  NODE_VERSION: ${{ inputs.node_version }}
 
 jobs:
   setup:
@@ -82,7 +88,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22' # Ensure correct Node.js version
+          node-version: ${{ env.NODE_VERSION }} # Ensure correct Node.js version
           cache: yarn
 
       - name: Cache Yarn Dependencies
@@ -109,8 +115,6 @@ jobs:
           name: vercel-build-output
           path: |
             .vercel/output
-            .next
-            .contentlayer
           include-hidden-files: true
 
   deploy:
@@ -145,5 +149,5 @@ jobs:
 
       - name: Deploy Project Artifacts to Vercel
         run: |
-          vercel deploy --prebuilt --token=${{ secrets.vercel_token }} \
+          vercel deploy --prebuilt --archive=tgz --token=${{ secrets.vercel_token }} \
             --target=${{ needs.setup.outputs.env || 'preview' }}
