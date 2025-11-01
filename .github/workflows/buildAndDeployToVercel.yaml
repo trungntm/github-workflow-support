@@ -10,8 +10,9 @@ on:
         default: preview
       node_version:
         description: 'Node.js Version'
-        required: true
+        required: false
         default: '22'
+        type: string
     secrets:
       vercel_token:
         description: 'Vercel Token'
@@ -23,7 +24,6 @@ on:
         description: 'Vercel Project ID'
         required: true
       
-
 env:
   VERCEL_ORG_ID: ${{ secrets.vercel_org_id }}
   VERCEL_PROJECT_ID: ${{ secrets.vercel_project_id }}
