@@ -108,13 +108,17 @@ jobs:
       - name: List Build Output Files
         run: |
           ls -la .vercel/output
+      
+      - name: Archive build output
+        run: |
+          tar -czf vercel-output.tar.gz .vercel/output .next .contentlayer
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: vercel-build-output
           path: |
-            .vercel/output
+            vercel-output.tar.gz
           include-hidden-files: true
 
   deploy:
@@ -146,6 +150,9 @@ jobs:
           key: yarn-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             yarn-${{ runner.os }}-
+
+      - name: Extract Build Artifacts
+        run: tar -xzf vercel-output.tar.gz
 
       - name: Deploy Project Artifacts to Vercel
         run: |
